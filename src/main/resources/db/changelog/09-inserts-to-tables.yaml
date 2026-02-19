@@ -1,0 +1,248 @@
+databaseChangeLog:
+  - changeSet:
+      id: inserts-to-tables
+      author: wojtek-a
+      changes:
+#INSERTS TO TABLE ROLES
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: role_name, value: 'ADMIN' }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: role_name, value: 'CUSTOMER' }
+#INSERTS TO TABLE USERS
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "admin@booking.app"}
+              - column: { name: first_name, value: "John" }
+              - column: { name: last_name, value: "Doe" }
+              - column: { name: password, value: "$2a$10$4vP.Te7rhw9z/.oRZT7CbeQnVWEu3NOQHwxrzp4yZNGJue34WlhrO"}
+              - column: { name: role_id, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "jane@google.pl"}
+              - column: { name: first_name, value: "Jane" }
+              - column: { name: last_name, value: "Doe" }
+              - column: { name: password, value: "$2a$10$dfu68e.RLtlKPFFIaRk5s.fdF2caEWBaZRXG2i9kSq452z.bmBjje"}
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: is_deleted, valueBoolean: false }
+#INSERTS TO TABLE LOCATIONS
+        - insert:
+           tableName: locations
+           columns:
+              - column: { name: country, value: "Poland" }
+              - column: { name: city, value: "Warsaw" }
+              - column: { name: street, value: "Swietokrzyska 1" }
+        - insert:
+            tableName: locations
+            columns:
+              - column: { name: country, value: "USA" }
+              - column: { name: city, value: "NY" }
+              - column: { name: street, value: "Fifth Avenue 1" }
+        - insert:
+            tableName: locations
+            columns:
+              - column: { name: country, value: "Norway" }
+              - column: { name: city, value: "Oslo" }
+              - column: { name: street, value: "Kildas Vei 1" }
+#INSERTS TO TABLE AMENITIES
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Wifi" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Gymnasium" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Parking" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Elevator" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Dishwasher" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Smart TV" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: amenities
+            columns:
+              - column: { name: name, value: "Coffee maker" }
+              - column: { name: is_deleted, valueBoolean: false }
+#INSERTS TO TABLE ACCOMMODATIONS
+        - insert:
+            tableName: accommodations
+            columns:
+              - column: { name: type, value: "APARTMENT" }
+              - column: { name: location_id, valueNumeric: 1 }
+              - column: { name: size, value: "Studio" }
+              - column: { name: daily_rate, valueNumeric: 10 }
+              - column: { name: availability, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: accommodations
+            columns:
+              - column: { name: type, value: "CONDO" }
+              - column: { name: location_id, valueNumeric: 2 }
+              - column: { name: size, value: "2 Bedroom" }
+              - column: { name: daily_rate, valueNumeric: 20 }
+              - column: { name: availability, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: accommodations
+            columns:
+              - column: { name: type, value: "HOUSE" }
+              - column: { name: location_id, valueNumeric: 3 }
+              - column: { name: size, value: "150 m2" }
+              - column: { name: daily_rate, valueNumeric: 30 }
+              - column: { name: availability, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+#INSERTS TO TABLE AMENITIES_ACCOMMODATIONS
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 1 }
+              - column: { name: amenity_id, valueNumeric: 1 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 1 }
+              - column: { name: amenity_id, valueNumeric: 3 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 1 }
+              - column: { name: amenity_id, valueNumeric: 4 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 1 }
+              - column: { name: amenity_id, valueNumeric: 6 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 1 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 2 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 4 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 5 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 6 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: amenity_id, valueNumeric: 7 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: amenity_id, valueNumeric: 1 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: amenity_id, valueNumeric: 3 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: amenity_id, valueNumeric: 5 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: amenity_id, valueNumeric: 6 }
+        - insert:
+            tableName: amenities_accommodations
+            columns:
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: amenity_id, valueNumeric: 7 }
+#INSERTS TO TABLE BOOKINGS
+        - insert:
+            tableName: bookings
+            columns:
+              - column: { name: check_in_date, value: "2027-01-01" }
+              - column: { name: check_out_date, value: "2027-02-01" }
+              - column: { name: accommodation_id, valueNumeric: 1 }
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: status, value: "PENDING" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: bookings
+            columns:
+              - column: { name: check_in_date, value: "2027-02-02" }
+              - column: { name: check_out_date, value: "2027-03-02" }
+              - column: { name: accommodation_id, valueNumeric: 2 }
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: status, value: "CONFIRMED" }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: bookings
+            columns:
+              - column: { name: check_in_date, value: "2026-05-02" }
+              - column: { name: check_out_date, value: "2026-05-06" }
+              - column: { name: accommodation_id, valueNumeric: 3 }
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: status, value: "CANCELLED" }
+              - column: { name: is_deleted, valueBoolean: false }
+#INSERTS TO TABLE PAYMENTS
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: status, value: "PENDING" }
+              - column: { name: booking_id, valueNumeric: 1 }
+              - column: { name: session_url, value: "https://checkout.stripe.com/c/pay/cs_test_a1ul8GYVbyk0MZL75ePtaVvC0PYm8TNXMwcq3Flcze0fZBIX4SvzhlJkIM#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VnFzNGFEbVJIQEB2VV88YUFLXDdrRGF%2FVX1sdDAxS38xQ1FAM09vRGRhQTFmRF0zUDJhcW5cbEtkYW5TMjFGblEwTkdxQ2ZuX2dpVlV8a2FVV39qYlwzNTUwMnQyfDd9YCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl" }
+              - column: { name: session_id, value: "cs_test_a1ul8GYVbyk0MZL75ePtaVvC0PYm8TNXMwcq3Flcze0fZBIX4SvzhlJkIM" }
+              - column: { name: amount_to_pay, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: status, value: "CONFIRMED" }
+              - column: { name: booking_id, valueNumeric: 2 }
+              - column: { name: session_url, value: "https://checkout.stripe.com/c/pay/cs_test_a1HwzkNrvJvHWbiKQsc6tjpVa7n9r6qlPOp87uv2c4KhfTeWBb38WcniLO#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VnFzNGFEbVJIQEB2VV88YUFLXDdrRGF%2FVX1sdDAxS38xQ1FAM09vRGRhQTFmRF0zUDJhcW5cbEtkYW5TMjFGblEwTkdxQ2ZuX2dpVlV8a2FVV39qYlwzNTUwMnQyfDd9YCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl" }
+              - column: { name: session_id, value: "cs_test_a1HwzkNrvJvHWbiKQsc6tjpVa7n9r6qlPOp87uv2c4KhfTeWBb38WcniLO" }
+              - column: { name: amount_to_pay, valueNumeric: 1 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: status, value: "CANCELED" }
+              - column: { name: booking_id, valueNumeric: 3 }
+              - column: { name: session_url, value: "https://checkout.stripe.com/c/pay/cs_test_a1HwzkNrvJvHWbiKQsc6tjpVa7n9r6qlPOp87uv2c4KhfTeWBb38WcniLO#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VnFzNGFEbVJIQEB2VV88YUFLXDdrRGF%2FVX1sdDAxS38xQ1FAM09vRGRhQTFmRF0zUDJhcW5cbEtkYW5TMjFGblEwTkdxQ2ZuX2dpVlV8a2FVV39qYlwzNTUwMnQyfDd9YCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl" }
+              - column: { name: session_id, value: "cs_test_a1HwzkNrvJvHWbiKQsc6tjpVa7n9r6qlPOp87uv2c4KhfTeWBb38WcniLO" }
+              - column: { name: amount_to_pay, valueNumeric: 667 }
+              - column: { name: is_deleted, valueBoolean: false }
