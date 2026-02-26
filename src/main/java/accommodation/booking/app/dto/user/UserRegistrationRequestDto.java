@@ -5,10 +5,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @PasswordMatch(first = "password", second = "repeatedPassword",
         message = "Password do not match with repeated password")
 @Getter
+@Setter
+@Accessors(chain = true)
 public class UserRegistrationRequestDto {
     @NotBlank(message = "Cannot be empty")
     @Email(message = "Must be a valid email")

@@ -3,7 +3,6 @@ package accommodation.booking.app.controller;
 import accommodation.booking.app.dto.user.UserResponseDto;
 import accommodation.booking.app.dto.user.UserRoleResponseDto;
 import accommodation.booking.app.dto.user.UserUpdateRequestDto;
-import accommodation.booking.app.model.User;
 import accommodation.booking.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +32,8 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public UserRoleResponseDto updateUserRole(@PathVariable Long id,
                                               Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return userService.updateUserRole(id, user);
+        String userEmail = authentication.getName();
+        return userService.updateUserRole(id, userEmail);
     }
 
     @GetMapping("/me")
@@ -42,8 +41,8 @@ public class UserController {
             description = "Provides user information for logged in user")
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public UserResponseDto getLoggedInUserInfo(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return userService.getLoggedInUserInfo(user);
+        String userEmail = authentication.getName();
+        return userService.getLoggedInUserInfo(userEmail);
     }
 
     @PatchMapping("/me")
@@ -52,7 +51,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public UserResponseDto updateLoggedInUserInfo(Authentication authentication, @Valid
             @RequestBody UserUpdateRequestDto request) {
-        User user = (User) authentication.getPrincipal();
-        return userService.updateLoggedInUserInfo(request, user);
+        String userEmail = authentication.getName();
+        return userService.updateLoggedInUserInfo(request, userEmail);
     }
 }

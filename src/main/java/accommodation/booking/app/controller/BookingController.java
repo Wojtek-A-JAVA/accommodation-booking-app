@@ -3,7 +3,6 @@ package accommodation.booking.app.controller;
 import accommodation.booking.app.dto.booking.BookingDto;
 import accommodation.booking.app.dto.booking.BookingUpdateRequestDto;
 import accommodation.booking.app.dto.booking.CreateBookingRequestDto;
-import accommodation.booking.app.model.User;
 import accommodation.booking.app.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,8 +37,8 @@ public class BookingController {
     public BookingDto createBooking(
             @RequestBody @Valid CreateBookingRequestDto bookingRequestDtoDto,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return bookingService.createBooking(bookingRequestDtoDto, user);
+        String userEmail = authentication.getName();
+        return bookingService.createBooking(bookingRequestDtoDto, userEmail);
     }
 
     @GetMapping({"", "/"})
@@ -56,8 +55,8 @@ public class BookingController {
             description = "Retrieves bookings for logged in user")
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public List<BookingDto> getUserBookings(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return bookingService.getUserBookings(user);
+        String userEmail = authentication.getName();
+        return bookingService.getUserBookings(userEmail);
     }
 
     @GetMapping("/{id}")
@@ -76,8 +75,8 @@ public class BookingController {
             @PathVariable Long id,
             @RequestBody @Valid BookingUpdateRequestDto bookingUpdateRequestDto,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return bookingService.updateBooking(id, bookingUpdateRequestDto, user);
+        String userEmail = authentication.getName();
+        return bookingService.updateBooking(id, bookingUpdateRequestDto, userEmail);
     }
 
     @DeleteMapping("/{id}")

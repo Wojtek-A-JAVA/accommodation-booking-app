@@ -10,12 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "roles")
+@Setter
+@Getter
+@Accessors(chain = true)
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

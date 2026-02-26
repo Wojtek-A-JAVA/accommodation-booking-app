@@ -45,8 +45,9 @@ public class AccommodationServiceImpl implements AccommodationService {
                     () -> new EntityNotFoundException("Location not found in database")
         );
         Accommodation accommodation = accommodationMapper.toEntity(accommodationRequestDto);
-        notifier.telegramSendMessage(createAccommodationMessage(accommodation, location));
-        return accommodationMapper.toDto(accommodationMapper.toEntity(accommodationRequestDto));
+        Accommodation safedAccommodation = accommodationRepository.save(accommodation);
+        notifier.telegramSendMessage(createAccommodationMessage(safedAccommodation, location));
+        return accommodationMapper.toDto(safedAccommodation);
     }
 
     @Override

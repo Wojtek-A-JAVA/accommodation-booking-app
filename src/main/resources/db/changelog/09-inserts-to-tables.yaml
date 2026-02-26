@@ -31,6 +31,15 @@ databaseChangeLog:
               - column: { name: password, value: "$2a$10$dfu68e.RLtlKPFFIaRk5s.fdF2caEWBaZRXG2i9kSq452z.bmBjje"}
               - column: { name: role_id, valueNumeric: 2 }
               - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "james@google.com"}
+              - column: { name: first_name, value: "James" }
+              - column: { name: last_name, value: "Doe" }
+              - column: { name: password, value: "$2a$10$.oxlUdFAQqW6EmrHs8oC0eTY4CIZqCp30E74KC2stjaPOMSesuyji"}
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: is_deleted, valueBoolean: false }
 #INSERTS TO TABLE LOCATIONS
         - insert:
            tableName: locations
@@ -215,7 +224,7 @@ databaseChangeLog:
               - column: { name: check_in_date, value: "2026-05-02" }
               - column: { name: check_out_date, value: "2026-05-06" }
               - column: { name: accommodation_id, valueNumeric: 3 }
-              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: user_id, valueNumeric: 3 }
               - column: { name: status, value: "CANCELLED" }
               - column: { name: is_deleted, valueBoolean: false }
 #INSERTS TO TABLE PAYMENTS

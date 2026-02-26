@@ -17,6 +17,7 @@ import accommodation.booking.app.notification.telegram.NotificationService;
 import accommodation.booking.app.repository.AccommodationRepository;
 import accommodation.booking.app.repository.BookingRepository;
 import accommodation.booking.app.repository.PaymentRepository;
+import accommodation.booking.app.repository.UserRepository;
 import accommodation.booking.app.service.BookingService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
     private final NotificationService notifier;
     private final NotificationService notificationService;
     private final AccommodationRepository accommodationRepository;
@@ -40,7 +42,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto createBooking(CreateBookingRequestDto bookingRequestDtoDto, User user) {
+    public BookingDto createBooking(CreateBookingRequestDto bookingRequestDtoDto,
+                                    String userEmail) {
+        User user = getUser(userEmail);
         checkUserPayments(user);
         final Accommodation accommodation = accommodationRepository.findById(
                 bookingRequestDtoDto.accommodationId()).orElseThrow(
@@ -73,7 +77,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getUserBookings(User user) {
+    public List<BookingDto> getUserBookings(String userEmail) {
+        User user = getUser(userEmail);
         List<Booking> bookingList = bookingRepository.findByUserId(user.getId());
         if (bookingList.isEmpty()) {
             return List.of();
@@ -93,7 +98,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto updateBooking(Long id, BookingUpdateRequestDto bookingUpdateRequestDto,
-                                    User user) {
+                                    String userEmail) {
+        User user = getUser(userEmail);
         Booking booking = findBookingInDb(id);
         if (!booking.getUser().equals(user) && user.getRole().equals(CUSTOMER)) {
             throw new BookingException("Logged customer doesn't match with booking user "
@@ -152,6 +158,12 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(Status.EXPIRED);
             bookingRepository.save(booking);
         }
+    }
+
+    private User getUser(String userEmail) {
+        return userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new EntityNotFoundException("User with email " + userEmail
+                        + " not found in database"));
     }
 
     private void checkUserPayments(User user) {

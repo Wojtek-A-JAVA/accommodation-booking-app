@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserRoleResponseDto updateUserRole(Long id, User user) {
+    public UserRoleResponseDto updateUserRole(Long id, String userEmail) {
+        User user = getUser(userEmail);
         if (!user.getId().equals(id)) {
             throw new IllegalArgumentException("Logged user id doesn't match with id " + id);
         }
@@ -64,15 +65,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getLoggedInUserInfo(User user) {
-        User loggedUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new EntityNotFoundException("User not found in database"));
-        return userMapper.toDto(loggedUser);
+    public UserResponseDto getLoggedInUserInfo(String userEmail) {
+        return userMapper.toDto(getUser(userEmail));
     }
 
     @Override
     @Transactional
-    public UserResponseDto updateLoggedInUserInfo(UserUpdateRequestDto request, User user) {
+    public UserResponseDto updateLoggedInUserInfo(UserUpdateRequestDto request, String userEmail) {
+        User user = getUser(userEmail);
         User loggedUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new EntityNotFoundException("User not found in database"));
         if (request.getPassword() != null) {
@@ -88,5 +88,11 @@ public class UserServiceImpl implements UserService {
             loggedUser.setEmail(request.getEmail());
         }
         return userMapper.toDto(userRepository.save(loggedUser));
+    }
+
+    private User getUser(String userEmail) {
+        return userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new EntityNotFoundException("User with email " + userEmail
+                        + " not found in database"));
     }
 }

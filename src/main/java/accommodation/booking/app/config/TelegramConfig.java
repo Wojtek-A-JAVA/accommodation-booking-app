@@ -1,6 +1,7 @@
 package accommodation.booking.app.config;
 
 import accommodation.booking.app.notification.telegram.TelegramBot;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class TelegramConfig {
 
     @Bean
+    @ConditionalOnProperty(name = "telegram.enabled", havingValue = "true", matchIfMissing = true)
     public TelegramBotsApi telegramBotsApi(TelegramBot bot) throws TelegramApiException {
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
         api.registerBot(bot);

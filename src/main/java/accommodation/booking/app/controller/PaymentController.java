@@ -3,7 +3,6 @@ package accommodation.booking.app.controller;
 import accommodation.booking.app.dto.payment.CreatePaymentRequestDto;
 import accommodation.booking.app.dto.payment.PaymentDto;
 import accommodation.booking.app.dto.payment.PaymentResponseDto;
-import accommodation.booking.app.model.User;
 import accommodation.booking.app.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +34,8 @@ public class PaymentController {
             @RequestParam(name = "user_id") Long userId,
             Authentication authentication
     ) {
-        User user = (User) authentication.getPrincipal();
-        return paymentService.getAllPaymentsByUserId(userId, user);
+        String userEmail = authentication.getName();
+        return paymentService.getAllPaymentsByUserId(userId, userEmail);
     }
 
     @PostMapping
@@ -46,8 +45,8 @@ public class PaymentController {
     public PaymentDto createPaymentSession(
             @Valid @RequestBody CreatePaymentRequestDto requestDto, Authentication authentication
     ) {
-        User user = (User) authentication.getPrincipal();
-        return paymentService.createPaymentSession(requestDto, user);
+        String userEmail = authentication.getName();
+        return paymentService.createPaymentSession(requestDto, userEmail);
     }
 
     @GetMapping("/success")

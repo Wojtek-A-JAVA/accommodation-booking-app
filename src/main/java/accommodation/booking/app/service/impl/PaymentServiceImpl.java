@@ -17,8 +17,10 @@ import accommodation.booking.app.model.User;
 import accommodation.booking.app.notification.telegram.NotificationService;
 import accommodation.booking.app.repository.BookingRepository;
 import accommodation.booking.app.repository.PaymentRepository;
+import accommodation.booking.app.repository.UserRepository;
 import accommodation.booking.app.service.PaymentService;
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
@@ -27,6 +29,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
     private final PaymentMapper paymentMapper;
     private final NotificationService notifier;
 
@@ -49,8 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
     private String stripeSecretKey;
 
     @Override
-    public List<PaymentDto> getAllPaymentsByUserId(Long id, User user) {
-        if (id != user.getId() && user.getRole().equals(CUSTOMER)) {
+    public List<PaymentDto> getAllPaymentsByUserId(Long id, String userEmail) {
+        User user = getUser(userEmail);
+        if (!Objects.equals(id, user.getId()) && user.getRole().equals(CUSTOMER)) {
             throw new BookingException("Logged user doesn't match with user id in path");
         }
         return paymentRepository.findAllByBookingId_User_Id(id).stream()
@@ -61,11 +66,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDto createPaymentSession(CreatePaymentRequestDto createPaymentRequestDto,
-                                           User user) {
+                                           String userEmail) {
+        User user = getUser(userEmail);
         Booking booking = getBookingById(createPaymentRequestDto.bookingId());
         validateBooking(booking);
         validateUser(booking.getUser().getId(), user);
         validateStripeSecretKey();
+        validateBaseUrl();
         BigDecimal amountToPay = amountToPay(booking);
         long amountInCents = toCents(amountToPay);
         Stripe.apiKey = stripeSecretKey;
@@ -98,6 +105,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         try {
             Session session = Session.create(params);
+            validateCreatedSession(session);
 
             Payment payment = new Payment()
                     .setBookingId(booking)
@@ -109,7 +117,10 @@ public class PaymentServiceImpl implements PaymentService {
             Payment savedPayment = paymentRepository.save(payment);
             return paymentMapper.toDto(savedPayment);
 
-        } catch (Exception e) {
+        } catch (StripeException e) {
+            throw new IllegalStateException("Stripe error while creating Checkout session: "
+                    + e.getMessage(), e);
+        } catch (PaymentException e) {
             throw new IllegalStateException("Failed to create Stripe Checkout session", e);
         }
     }
@@ -124,7 +135,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         try {
             Session session = Session.retrieve(sessionId);
-
             String paymentStatus = session.getPaymentStatus();
             if ("paid".equalsIgnoreCase(paymentStatus)) {
                 payment.setStatus(Status.valueOf("CONFIRMED"));
@@ -137,7 +147,10 @@ public class PaymentServiceImpl implements PaymentService {
                 return paymentResponseDto;
             }
             return paymentMapper.toResponseDto(payment);
-        } catch (Exception e) {
+        } catch (StripeException e) {
+            throw new IllegalStateException("Stripe error while verifying session "
+                    + sessionId + ": " + e.getMessage(), e);
+        } catch (PaymentException e) {
             throw new IllegalStateException("Failed to verify Stripe session: " + sessionId, e);
         }
     }
@@ -160,6 +173,12 @@ public class PaymentServiceImpl implements PaymentService {
         paymentResponseDto.setMessage("Payment is canceled and can be made later, "
                 + "but the session is available only for 24 hours");
         return paymentResponseDto;
+    }
+
+    private User getUser(String userEmail) {
+        return userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new EntityNotFoundException("User with email " + userEmail
+                        + " not found in database"));
     }
 
     private void validateBooking(Booking booking) {
@@ -187,6 +206,12 @@ public class PaymentServiceImpl implements PaymentService {
     private void validateStripeSecretKey() {
         if (stripeSecretKey == null || stripeSecretKey.isBlank()) {
             throw new IllegalStateException("Stripe secret key is not configured");
+        }
+    }
+
+    private void validateBaseUrl() {
+        if (baseUrl == null || baseUrl.isBlank()) {
+            throw new IllegalStateException("base-url is not configured");
         }
     }
 
@@ -218,6 +243,20 @@ public class PaymentServiceImpl implements PaymentService {
     private Booking getBookingById(Long id) {
         return bookingRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Booking not found in database"));
+    }
+
+    private void validateCreatedSession(Session session) {
+        if (session == null) {
+            throw new IllegalStateException(
+                    "Stripe returned null Checkout Session."
+            );
+        }
+        if (session.getId() == null || session.getId().isBlank()) {
+            throw new IllegalStateException("Stripe Checkout Session was created without an id");
+        }
+        if (session.getUrl() == null || session.getUrl().isBlank()) {
+            throw new IllegalStateException("Stripe Checkout Session was created without a url");
+        }
     }
 
     private String paymentSucceededMessage(Payment payment, Booking booking) {
