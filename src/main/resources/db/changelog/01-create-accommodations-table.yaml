@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-accommodations-table
+      author: wojtek-a
+      changes:
+        - createTable:
+            tableName: accommodations
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: daily_rate
+                  type: decimal(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: availability
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: BIT(1)
+                  constraints:
+                    nullable: false
