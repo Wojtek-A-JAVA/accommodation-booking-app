@@ -29,7 +29,7 @@ public class UserController {
     @PutMapping("/{id}/role")
     @Operation(summary = "Update user role",
             description = "Enables users to update their roles, providing role-based access")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserRoleResponseDto updateUserRole(@PathVariable Long id,
                                               Authentication authentication) {
         String userEmail = authentication.getName();

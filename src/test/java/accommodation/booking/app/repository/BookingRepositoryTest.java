@@ -44,6 +44,7 @@ class BookingRepositoryTest {
         List<Booking> reserved = bookingRepository.findReservedAccommodations(
                 1L,
                 LocalDate.of(2027, 1, 15),
+                LocalDate.of(2027,1,15),
                 EnumSet.of(Status.CANCELED, Status.EXPIRED)
         );
 

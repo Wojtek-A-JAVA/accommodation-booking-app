@@ -10,13 +10,11 @@ import accommodation.booking.app.exception.EntityNotFoundException;
 import accommodation.booking.app.mapper.BookingMapper;
 import accommodation.booking.app.model.Accommodation;
 import accommodation.booking.app.model.Booking;
-import accommodation.booking.app.model.Payment;
 import accommodation.booking.app.model.Status;
 import accommodation.booking.app.model.User;
 import accommodation.booking.app.notification.telegram.NotificationService;
 import accommodation.booking.app.repository.AccommodationRepository;
 import accommodation.booking.app.repository.BookingRepository;
-import accommodation.booking.app.repository.PaymentRepository;
 import accommodation.booking.app.repository.UserRepository;
 import accommodation.booking.app.service.BookingService;
 import java.math.BigDecimal;
@@ -38,7 +36,6 @@ public class BookingServiceImpl implements BookingService {
     private final NotificationService notifier;
     private final NotificationService notificationService;
     private final AccommodationRepository accommodationRepository;
-    private final PaymentRepository paymentRepository;
 
     @Override
     @Transactional
@@ -52,7 +49,8 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toEntity(bookingRequestDtoDto);
         List<Booking> existingBookings = bookingRepository
                 .findReservedAccommodations(booking.getAccommodation().getId(),
-                        booking.getCheckInDate(), EnumSet.of(Status.CANCELED, Status.EXPIRED));
+                        booking.getCheckInDate(), booking.getCheckOutDate(),
+                        EnumSet.of(Status.CANCELED, Status.EXPIRED));
         if (!existingBookings.isEmpty()) {
             throw new BookingException("Accommodation is already booked at the given dates");
         }
@@ -168,14 +166,16 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkUserPayments(User user) {
         if (user.getRole().getRoleName().equals(CUSTOMER)) {
-            List<Payment> unpaidPaymentsList = paymentRepository
-                    .findAllByBookingId_User_IdAndStatus(user.getId(), Status.PENDING);
-            int nr = unpaidPaymentsList.size();
+            List<Booking> pendingUserBookingList =
+                    bookingRepository.findByUserIdAndStatus(user.getId(), Status.PENDING);
+            int nr = pendingUserBookingList.size();
             if (nr == 1) {
-                throw new BookingException("You have 1 unpaid payment");
+                throw new BookingException("You have 1 unpaid payment. "
+                        + "You must pay it or cancel it.");
             }
             if (nr > 1) {
-                throw new BookingException("You have " + nr + " unpaid payments");
+                throw new BookingException("You have " + nr
+                        + " unpaid payments. You must pay them or cancel them.");
             }
         }
     }

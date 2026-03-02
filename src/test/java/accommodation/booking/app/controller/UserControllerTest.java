@@ -33,16 +33,16 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(username = "james@google.com", roles = "CUSTOMER")
-    @Sql(scripts = "classpath:database/users/restore-updated-user-role-id3.sql",
+    @WithMockUser(username = "admin@booking.app", roles = "ADMIN")
+    @Sql(scripts = "classpath:database/users/restore-updated-user-role-id1.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateUserRole_Success() throws Exception {
-        Long userId = 3L;
+        Long userId = 1L;
 
         mockMvc.perform(put("/users/{id}/role", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.role").value("ADMIN")
+                .andExpect(jsonPath("$.role").value("CUSTOMER")
                 );
     }
 

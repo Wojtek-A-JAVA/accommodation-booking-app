@@ -13,19 +13,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<Booking> findByUserIdAndStatus(Long userId, Status status);
+    @Query("""
+            select b from Booking b
+             where b.user.id = :userId
+               and b.status = :status
+               and b.isDeleted = false
+            """)
+    List<Booking> findByUserIdAndStatus(@Param("userId") Long userId,
+                                        @Param("status") Status status);
 
     List<Booking> findByUserId(Long userId);
 
     @Query("""
-            select b from Booking b
+           select b from Booking b
             where b.accommodation.id = :accommodationId
-              and b.checkInDate <= :date
-              and b.checkOutDate > :date
-              and b.status not in :nonReservedStatuses     
+              and b.checkInDate < :checkOutDate
+              and b.checkOutDate > :checkInDate
+              and b.status not in :nonReservedStatuses
             """)
-    List<Booking> findReservedAccommodations(Long accommodationId, LocalDate date,
-                                             Set<Status> nonReservedStatuses);
+    List<Booking> findReservedAccommodations(@Param("accommodationId") Long accommodationId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("nonReservedStatuses") Set<Status> nonReservedStatuses);
 
     @Query("""
 

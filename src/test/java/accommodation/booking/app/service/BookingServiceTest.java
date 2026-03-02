@@ -20,7 +20,6 @@ import accommodation.booking.app.mapper.BookingMapper;
 import accommodation.booking.app.model.Accommodation;
 import accommodation.booking.app.model.Booking;
 import accommodation.booking.app.model.Location;
-import accommodation.booking.app.model.Payment;
 import accommodation.booking.app.model.Role;
 import accommodation.booking.app.model.RoleName;
 import accommodation.booking.app.model.Status;
@@ -69,7 +68,7 @@ class BookingServiceTest {
         User user = new User().setId(3L).setEmail("james@google.com").setRole(customerRole);
 
         when(userRepository.findByEmail("james@google.com")).thenReturn(Optional.of(user));
-        when(paymentRepository.findAllByBookingId_User_IdAndStatus(3L, Status.PENDING))
+        when(bookingRepository.findByUserIdAndStatus(3L, Status.PENDING))
                 .thenReturn(List.of());
 
         Location location = new Location().setId(7L);
@@ -97,6 +96,7 @@ class BookingServiceTest {
         when(bookingRepository.findReservedAccommodations(
                 eq(5L),
                 eq(request.checkInDate()),
+                eq(request.checkOutDate()),
                 eq(EnumSet.of(Status.CANCELED, Status.EXPIRED))
         )).thenReturn(List.of());
 
@@ -124,11 +124,11 @@ class BookingServiceTest {
     void createBooking_WhenCustomerHasPendingPayment_ThrowsBookingException() {
         Role customerRole = new Role().setRoleName(RoleName.CUSTOMER);
 
-        User user = new User().setId(3L).setEmail("james@google.com").setRole(customerRole);
-        when(userRepository.findByEmail("james@google.com")).thenReturn(Optional.of(user));
+        User user = new User().setId(2L).setEmail("jane@google.pl").setRole(customerRole);
+        when(userRepository.findByEmail("jane@google.pl")).thenReturn(Optional.of(user));
 
-        when(paymentRepository.findAllByBookingId_User_IdAndStatus(3L, Status.PENDING))
-                .thenReturn(List.of(new Payment().setId(1L)));
+        when(bookingRepository.findByUserIdAndStatus(user.getId(), Status.PENDING))
+                .thenReturn(List.of(new Booking().setId(1L)));
 
         CreateBookingRequestDto request = new CreateBookingRequestDto(
                 LocalDate.now().plusDays(10),
@@ -137,7 +137,7 @@ class BookingServiceTest {
         );
 
         assertThrows(BookingException.class,
-                () -> service.createBooking(request, "james@google.com"));
+                () -> service.createBooking(request, "jane@google.pl"));
 
         verifyNoInteractions(accommodationRepository);
         verify(bookingRepository, never()).save(any());
@@ -150,7 +150,7 @@ class BookingServiceTest {
         User user = new User().setId(3L).setEmail("james@google.com").setRole(customerRole);
 
         when(userRepository.findByEmail("james@google.com")).thenReturn(Optional.of(user));
-        when(paymentRepository.findAllByBookingId_User_IdAndStatus(3L, Status.PENDING))
+        when(bookingRepository.findByUserIdAndStatus(3L, Status.PENDING))
                 .thenReturn(List.of());
 
         Location location = new Location().setId(7L);
@@ -176,6 +176,7 @@ class BookingServiceTest {
         when(bookingRepository.findReservedAccommodations(
                 eq(5L),
                 eq(requestDto.checkInDate()),
+                eq(requestDto.checkOutDate()),
                 eq(EnumSet.of(Status.CANCELED, Status.EXPIRED))
         )).thenReturn(List.of(new Booking().setId(1L)));
 
