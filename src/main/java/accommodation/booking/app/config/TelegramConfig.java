@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+@ConditionalOnProperty(name = "telegram.bot.enabled", havingValue = "true")
 @Configuration
 public class TelegramConfig {
 

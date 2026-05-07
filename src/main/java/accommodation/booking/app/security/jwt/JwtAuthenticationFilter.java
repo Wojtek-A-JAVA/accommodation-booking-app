@@ -1,5 +1,7 @@
-package accommodation.booking.app.security;
+package accommodation.booking.app.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,13 +33,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
 
-        if (token != null && jwtUtil.isValidToken(token)) {
-            String username = jwtUtil.getUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (token != null && jwtUtil.isValidToken(token)) {
+                String username = jwtUtil.getUsername(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ExpiredJwtException e) {
+            writeErrorResponse(response, "JWT token expired");
+            return;
+        } catch (JwtException e) {
+            writeErrorResponse(response, "Invalid JWT token");
+            return;
         }
         filterChain.doFilter(request, response);
     }
@@ -48,5 +58,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token.substring(tokenBeginIndex).trim();
         }
         return null;
+    }
+
+    private void writeErrorResponse(HttpServletResponse response,
+                                    String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("""
+                {
+                  "error": "Unauthorized",
+                  "message": "%s"
+                }
+                """.formatted(message));
     }
 }

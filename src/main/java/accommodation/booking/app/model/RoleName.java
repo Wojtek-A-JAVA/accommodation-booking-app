@@ -1,5 +1,5 @@
 package accommodation.booking.app.model;
 
 public enum RoleName {
-    ADMIN, CUSTOMER
+    PLATFORM_ADMIN, ADMIN, CUSTOMER
 }

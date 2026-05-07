@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Accommodation Controller", description = "Managing accommodation inventory")
+@Tag(name = "03. Accommodations", description = "Managing accommodation inventory")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/accommodations")
@@ -55,8 +55,8 @@ public class AccommodationController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update accommodation",
-            description = "Allows to update accommodation")
-    @PreAuthorize("hasRole('ADMIN')")
+            description = "Allows to update accommodation only by Platform Admin")
+    @PreAuthorize("hasRole('PLATFORM_ADMIN')")
     public AccommodationDto updateAccommodation(
             @PathVariable Long id, @RequestBody AccommodationUpdateRequestDto accommodationDto) {
         return accommodationService.updateAccommodation(id, accommodationDto);
@@ -64,8 +64,8 @@ public class AccommodationController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete accommodation",
-            description = "Allows to delete accommodation")
-    @PreAuthorize("hasRole('ADMIN')")
+            description = "Allows to delete accommodation only by Platform Admin")
+    @PreAuthorize("hasRole('PLATFORM_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAccommodation(@PathVariable Long id) {
         accommodationService.deleteAccommodation(id);

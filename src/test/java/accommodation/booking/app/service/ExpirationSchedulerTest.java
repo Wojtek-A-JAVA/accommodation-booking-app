@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import accommodation.booking.app.scheduler.ExpirationScheduler;
 
 class ExpirationSchedulerTest {
 

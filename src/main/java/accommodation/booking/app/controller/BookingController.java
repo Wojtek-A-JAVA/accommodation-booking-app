@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Booking Controller", description = "Booking related endpoints")
+@Tag(name = "04. Bookings", description = "Booking related endpoints")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/bookings")

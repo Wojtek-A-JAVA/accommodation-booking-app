@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "User Controller", description = "User related endpoints")
+@Tag(name = "02. Users", description = "User related endpoints")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/users")

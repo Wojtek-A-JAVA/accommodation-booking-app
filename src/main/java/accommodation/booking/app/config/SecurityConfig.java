@@ -1,7 +1,7 @@
 package accommodation.booking.app.config;
 
-import accommodation.booking.app.security.CustomUserDetailsService;
-import accommodation.booking.app.security.JwtAuthenticationFilter;
+import accommodation.booking.app.security.auth.CustomUserDetailsService;
+import accommodation.booking.app.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -92,7 +92,7 @@ class AccommodationControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "PLATFORM_ADMIN")
     @Sql(scripts = "classpath:database/accommodation/restore-updated-accommodation-id2.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateAccommodation_Success() throws Exception {
@@ -120,7 +120,7 @@ class AccommodationControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "PLATFORM_ADMIN")
     @Sql(scripts = "classpath:database/accommodation/restore-deleted-accommodation-id1.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void deleteAccommodation_Success() throws Exception {

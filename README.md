@@ -5,216 +5,496 @@
 [![Docker](https://img.shields.io/badge/Docker-Enabled-blue?style=for-the-badge&logo=docker)](https://www.docker.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-DB-4479A1?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
 
-A Spring Boot backend for managing accommodations, bookings, and payments.
+A Spring Boot backend application for managing accommodations, bookings, users, and payments.
 
-The application provides:
-- 🏘️ **Accommodation inventory** (create/update/delete + public listing)
-- 📅 **Bookings** (create, list, update, delete + scheduled expiration)
-- 💳 **Payments** (Stripe Checkout sessions + success/cancel callbacks)
-- 🔐 **JWT authentication** (register/login + role-based authorization)
-- 📣 **Telegram notifications** (optional, for key events)
-- 📚 **OpenAPI / Swagger UI** documentation
+The project demonstrates production-style backend features including:
+
+- 🔐 JWT authentication & role-based authorization
+- ⚡ API rate limiting
+- 💳 Stripe Checkout integration
+- 🧪 Integration testing with Testcontainers
+- 🧱 Database versioning with Liquibase
+- 🐳 Dockerized environment
+- 📣 Telegram notifications
+- 📚 OpenAPI / Swagger documentation
+- ⏰ Scheduled booking expiration
+- 🛡️ Global exception handling
 
 ---
 
-## 📑 Table of Contents
+# ✨ Key Features
+
+- 🏘️ Accommodation inventory management
+- 📅 Booking management with validation and business rules
+- 💳 Stripe payment flow
+- 🔐 JWT authentication with stateless security
+- 👥 Role-based authorization (`ADMIN`, `CUSTOMER`)
+- ⚡ API rate limiting using Bucket4j
+- 🧱 Database migrations with Liquibase
+- 🧪 Unit and integration tests
+- 🐳 Docker + Docker Compose support
+- 📣 Telegram notifications for important events
+- 📚 Swagger/OpenAPI documentation
+- ⏰ Scheduled expiration of outdated bookings
+
+---
+
+# 📑 Table of Contents
 
 - [🧰 Tech Stack](#-tech-stack)
-- [🗂️ Project Structure (high level)](#️-project-structure-high-level)
+- [🗂️ Project Structure](#️-project-structure)
 - [👥 Features & Roles](#-features--roles)
-    - [🧑‍💼 Roles](#-roles)
-    - [📏 Business Rules (examples)](#-business-rules-examples)
+- [⚡ Rate Limiting](#-rate-limiting)
+- [🛡️ Security Notes](#️-security-notes)
 - [🌐 API Overview](#-api-overview)
-    - [📖 OpenAPI / Swagger](#-openapi--swagger)
 - [🚀 Getting Started](#-getting-started)
-    - [✅ 1) Prerequisites](#-1-prerequisites)
-    - [🔧 2) Environment variables](#-2-environment-variables)
-    - [▶️ 3) Run locally (Maven)](#️-3-run-locally-maven)
+- [🐳 Run with Docker Compose](#-run-with-docker-compose)
 - [🔐 Authentication (JWT)](#-authentication-jwt)
 - [🗃️ Database & Migrations](#️-database--migrations)
-- [💬 Telegram Notifications](#-telegram-notifications)
 - [💳 Stripe Payments](#-stripe-payments)
+- [💬 Telegram Notifications](#-telegram-notifications)
+- [🧭 Application Flow](#-application-flow)
 - [🧪 Testing](#-testing)
 - [🛠️ Common Troubleshooting](#️-common-troubleshooting)
 
 ---
 
-## 🧰 Tech Stack
+# 🧰 Tech Stack
 
-- ☕ **Java** (SDK 21)
-- 🍃 **Spring Boot** (Web, Security, Data JPA, Validation)
-- 🧪 **Liquibase** (database migrations + seed data)
-- 🐬 **MySQL**
-- 🪪 **JWT** (stateless auth)
-- 💳 **Stripe** (Checkout sessions)
-- 💬 **Telegram Bots API** (notifications)
-- 🧩 **MapStruct** (DTO mapping)
-- 🧷 **Lombok**
-- ✅ **Testing**: JUnit 5, Mockito, Spring Boot Test
-
----
-
-## 🗂️ Project Structure (high level)
-
-- 🧭 `src/main/java/.../controller` — REST controllers (API endpoints)
-- 🧠 `src/main/java/.../service` — services (business logic)
-- 🗄️ `src/main/java/.../repository` — Spring Data JPA repositories
-- 🧱 `src/main/java/.../model` — JPA entities
-- 🧾 `src/main/resources/db/changelog` — Liquibase changelogs + seed data
-- 🧪 `src/test` — unit + integration tests
+- ☕ Java 21
+- 🍃 Spring Boot 3
+- 🔐 Spring Security + JWT
+- 🗄️ Spring Data JPA
+- 🧪 Bean Validation
+- 🧱 Liquibase
+- 🐬 MySQL
+- ⚡ Bucket4j
+- 💳 Stripe API
+- 📣 Telegram Bots API
+- 🧩 MapStruct
+- 🧷 Lombok
+- 🧪 JUnit 5 + Mockito + Spring Boot Test
+- 🐳 Docker & Docker Compose
+- 🧪 Testcontainers
 
 ---
 
-## Features & Roles
+# 🗂️ Project Structure
 
-### 🧑‍💼 Roles
-- 🛡️ `ADMIN`
-  - Manage accommodations
-  - View any user’s bookings (by user id + status)
-  - Delete bookings
-  - View payments (depending on service rules)
-- 🙋 `CUSTOMER`
-  - Browse accommodations
-  - Create/manage own bookings
-  - Create payment sessions for own bookings
-  - View own profile and update it
+```text
+src/main/java/accommodation/booking/app
+├── controller      # REST API controllers
+├── service         # Business logic
+├── repository      # Spring Data repositories
+├── model           # JPA entities
+├── dto             # Request / response DTOs
+├── mapper          # MapStruct mappers
+├── security        # JWT + Spring Security + rate limit
+├── exception       # Exception handling
+├── scheduler       # Scheduled jobs
+├── notification    # Telegram
+└── config          # Application configuration
+```
 
-### 📏 Business Rules (examples)
-- ✅ Bookings require valid dates and availability.
-- ⛔ Customer cannot create new booking if they have **pending payments**.
-- 💳 Payments can be created only for **PENDING** bookings.
-- ⏰ Scheduled job marks eligible bookings as **EXPIRED**.
-
----
-
-## 🌐 API Overview
-
-Base endpoints:
-- 🩺 `GET /health` — health check
-- 🧾 `POST /auth/register` — register a new user
-- 🔑 `POST /auth/login` — login and receive JWT token
-- 🏘️ `GET /accommodations` — public list of accommodations
-- ➕ `POST /accommodations` — create accommodation (ADMIN)
-- 🆕 `POST /bookings` — create booking (ADMIN/CUSTOMER)
-- 📋 `GET /bookings?user_id={id}&status={status}` — bookings by user+status (ADMIN)
-- 👤 `GET /bookings/my` — bookings of authenticated user
-- 💳 `POST /payments` — create Stripe Checkout session (ADMIN/CUSTOMER)
-- ✅ `GET /payments/success?session_id=...` — Stripe success callback (public)
-- ❌ `GET /payments/cancel?session_id=...` — Stripe cancel callback (public)
-- 🙍 `GET /users/me` — current user profile
-- ✏️ `PATCH /users/me` — update current user profile
-
-### 📖 OpenAPI / Swagger
-Once the application is running, Swagger UI is available at:
-
-- 🧭 `GET /swagger-ui.html`  
-or
-- 🧭 `GET /swagger-ui/index.html`
-
-And OpenAPI JSON:
-- 🧾 `GET /v3/api-docs`
+```text
+src/main/resources
+├── db/changelog    # Liquibase migrations + seed data
+├── application.properties
+├── application.local.properties
+└── application-docker.properties
+```
 
 ---
 
-## 🚀 Getting Started
+# 👥 Features & Roles
 
-### ✅ 1) Prerequisites
-- ☕ Java 21 installed
-- 🧰 Maven (or use the included `mvnw`)
-- 🐬 A MySQL database (for local run), or use 🐳 Docker
+## 🧑‍💼 Roles
 
-### 🔧 2) Environment variables
-The app reads configuration from `src/main/resources/application.properties` and supports `.env` import.
+### 🛡️ ADMIN
 
-Typical variables you should provide (example names):
-- 🧷 `SPRING_LOCAL_PORT` — local port used to build `app.base-url`
-- ⏳ `JWT_EXPIRATION` — token TTL in ms (e.g., `3600000`)
-- 🔑 `JWT_SECRET` — secret key for signing JWT (HMAC)
-- 🤖 `TELEGRAM_BOT_USERNAME` — Telegram bot username
-- 🪙 `TELEGRAM_BOT_TOKEN` — Telegram bot token
-- 🧑‍💻 `TELEGRAM_ADMIN_CHAT_ID` — chat id for notifications
-- 💳 `STRIPE_SECRET_KEY` — Stripe secret key
+- Manage accommodations
+- View all bookings
+- Manage payments
+- Access administration endpoints
+- Monitor rate limiting statistics
 
-> 💡 Tip: See `.env.template` if present in the repository, copy it to `.env`, fill values, and run.
+### 🙋 CUSTOMER
 
-### ▶️ 3) Run locally (Maven)
-bash ./mvnw spring-boot:run
-Or build a jar and run:
-bash ./mvnw clean package && java -jar target/accommodation-booking-app-0.0.1-SNAPSHOT.jar
-> Tip: Use `mvnw.cmd` on Windows. `docker-compose up` to run the app with a MySQL database.
+- Browse accommodations
+- Create and manage own bookings
+- Create payment sessions
+- View and edit own profile
 
 ---
 
-## 🔐 Authentication (JWT)
+## 📏 Business Rules
 
-1. 🧾 Register: `POST /auth/register`
-2. 🔑 Login: `POST /auth/login` → response contains `{ "token": "..." }`
-3. 🧷 Call protected endpoints with:
-    - Header: `Authorization: Bearer <token>`
-
----
-
-## 🗃️ Database & Migrations
-
-- 🧪 Liquibase migrations are located in `src/main/resources/db/changelog`.
-- 📌 The master changelog is: `db.changelog-master.yaml`.
-- 🌱 Seed data is included via changelogs (roles, users, sample locations, amenities, accommodations, bookings, payments).
+- ✅ Bookings require valid dates and availability
+- ⛔ User cannot create booking with pending payments
+- 💳 Payments are allowed only for `PENDING` bookings
+- ⏰ Expired bookings are updated automatically by scheduler
+- 🛡️ Protected endpoints require valid JWT token
+- 🚫 DELETE operations are restricted to preserve demo data integrity
 
 ---
 
-## 💬 Telegram Notifications
+# ⚡ Rate Limiting
 
-Telegram integration can be toggled via property:
-- ✅/❌ `telegram.enabled=true|false`
+The API includes rate limiting protection using Bucket4j.
 
-When enabled, the application sends messages on events such as:
+Limits:
+
+- 🧾 Register: `5 requests/minute per IP`
+- 🔑 Login: `10 requests/minute per IP`
+- 👤 Authenticated API: `50 requests/minute per user`
+- 🌐 Fallback: per IP if user is unauthenticated
+
+When the limit is exceeded:
+
+- API returns HTTP `429 Too Many Requests`
+
+GET endpoints are intentionally excluded from rate limiting to avoid unnecessary restrictions on public data browsing.
+
+Administration endpoint:
+
+- 📊 `GET /rate-limit`
+
+---
+
+# 🛡️ Security Notes
+
+- 🔐 JWT authentication is required for protected endpoints
+- 🧂 Passwords are hashed using BCrypt
+- 👥 Role-based authorization with Spring Security
+- ✅ Request DTO validation
+- 🛡️ Global exception handling
+- ⚡ Rate limiting for authentication and write endpoints
+- 🚫 Invalid or expired JWT tokens return HTTP `401 Unauthorized`
+
+---
+
+# 🌐 API Overview
+
+## Public Endpoints
+
+- 🩺 `GET /health`
+- 🧾 `POST /auth/register`
+- 🔑 `POST /auth/login`
+- 🏘️ `GET /accommodations`
+- 📚 `GET /swagger-ui/index.html`
+
+---
+
+## Protected Endpoints
+
+### 👤 Users
+
+- 🙍 `GET /users/me`
+- ✏️ `PATCH /users/me`
+
+### 📅 Bookings
+
+- 🆕 `POST /bookings`
+- 📋 `GET /bookings/my`
+- 📋 `GET /bookings?user_id={id}&status={status}`
+
+### 🏘️ Accommodations
+
+- ➕ `POST /accommodations`
+- ✏️ `PUT /accommodations/{id}`
+- ❌ `DELETE /accommodations/{id}`
+
+### 💳 Payments
+
+- 💳 `POST /payments`
+- ✅ `GET /payments/success`
+- ❌ `GET /payments/cancel`
+
+### ⚙️ Administration
+
+- 📊 `GET /rate-limit`
+
+---
+
+# 📖 OpenAPI / Swagger
+
+Swagger UI:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+OpenAPI JSON:
+
+```text
+http://localhost:8080/v3/api-docs
+```
+
+---
+
+# 🚀 Getting Started
+
+## ✅ Prerequisites
+
+- ☕ Java 21
+- 🧰 Maven
+- 🐳 Docker Desktop
+- 🐬 MySQL (optional for local run)
+
+---
+
+# 🔧 Environment Variables
+
+The application supports `.env` configuration.
+
+Example variables:
+
+```env
+# Server
+SPRING_LOCAL_PORT=8080
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRATION=3600000
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_xxx
+
+# Telegram
+TELEGRAM_ENABLED=false
+TELEGRAM_BOT_USERNAME=your_bot
+TELEGRAM_BOT_TOKEN=your_token
+TELEGRAM_ADMIN_CHAT_ID=123456789
+```
+
+---
+
+# ▶️ Run Locally (Maven)
+
+```bash
+./mvnw spring-boot:run
+```
+
+Or:
+
+```bash
+./mvnw clean package
+java -jar target/accommodation-booking-app-0.0.1-SNAPSHOT.jar
+```
+
+Windows:
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+---
+
+# 🐳 Run with Docker Compose
+
+Build and start the application:
+
+```bash
+docker compose up --build
+```
+
+Application:
+
+- API → `http://localhost:8080`
+- Swagger → `http://localhost:8080/swagger-ui/index.html`
+
+Stop containers:
+
+```bash
+docker compose down
+```
+
+Remove volumes:
+
+```bash
+docker compose down -v
+```
+
+---
+
+# 🔐 Authentication (JWT)
+
+## Login Flow
+
+1. 🧾 Register user
+2. 🔑 Login
+3. 📦 Receive JWT token
+4. 🧷 Use token in requests:
+
+```http
+Authorization: Bearer <token>
+```
+
+Expired or invalid tokens return:
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "JWT token expired"
+}
+```
+
+---
+
+# 🗃️ Database & Migrations
+
+Liquibase manages schema and seed data.
+
+Location:
+
+```text
+src/main/resources/db/changelog
+```
+
+Master changelog:
+
+```text
+db.changelog-master.yaml
+```
+
+Seed data includes:
+
+- 👥 Roles
+- 👤 Users
+- 🏘️ Accommodations
+- 📅 Bookings
+- 💳 Payments
+
+---
+
+# 💳 Stripe Payments
+
+Payment flow:
+
+1. 🧾 Create Stripe session:
+
+```http
+POST /payments
+```
+
+2. 🔁 User is redirected to Stripe Checkout
+
+3. ↩️ Stripe redirects to:
+
+- ✅ `/payments/success`
+- ❌ `/payments/cancel`
+
+Use Stripe test keys for development.
+
+---
+
+# 💬 Telegram Notifications
+
+Telegram integration is optional.
+
+Enable:
+
+```properties
+telegram.enabled=true
+```
+
+Notifications include:
+
 - 🏘️ Accommodation created
-- 📅 Booking created/updated/deleted
-- ✅ Payment succeeded (and other informational events)
+- 📅 Booking events
+- 💳 Payment status changes
 
 ---
 
-## 💳 Stripe Payments
+# 🧭 Application Flow
 
-The payment flow is based on Stripe Checkout sessions:
-1. 🧾 Create session: `POST /payments`
-2. 🔁 Client redirects user to Stripe Checkout URL
-3. ↩️ Stripe redirects back to:
-    - ✅ `/payments/success?session_id=...` or
-    - ❌ `/payments/cancel?session_id=...`
-
-> 🧪 For local development, use test keys (`sk_test_...`).  
-> 🔒 For production, use live keys and HTTPS.
+1. User registers and logs in
+2. JWT token is generated
+3. User creates booking
+4. User creates Stripe payment session
+5. Stripe redirects to success/cancel callback
+6. Booking/payment status is updated
+7. Telegram notification is sent
 
 ---
 
-## 🧪 Testing
+# 🧪 Testing
 
-This repository contains both:
-- ⚡ **Unit tests** (Mockito): fast, isolate business rules
-- 🧩 **Integration tests** (Spring Boot + MockMvc): validate controller behavior, security, and persistence
+The project contains:
 
-### ▶️ Run all tests
+- ⚡ Unit tests
+- 🧩 Integration tests
+- 🔐 Security tests
+- ✅ Validation tests
+- 🗄️ Repository tests
+
+Run tests:
+
+```bash
 mvn test
-
-### 🐳 Integration test database
-Tests are configured to use **Testcontainers via JDBC driver**, so you don’t need a local MySQL instance for tests.
+```
 
 ---
 
-## 🛠️ Common Troubleshooting
+## 🐳 Testcontainers
 
-### 🐳 Tests failing due to Docker/Testcontainers
-- ✅ Make sure Docker Desktop / Docker Engine is running.
-- 🪟 On Windows, ensure WSL2 backend is available.
+Integration tests use Testcontainers.
 
-### 🚨 Getting 500 errors instead of 401/403
-If exceptions are handled globally, authentication/authorization errors may be converted to 500.
-You can refine exception handling later to return proper HTTP codes (401/403/400) consistently.
+Requirements:
 
-### 📚 Swagger not available
-Ensure the app is running and that security configuration permits access to:
-- `/swagger-ui/**`
-- `/v3/api-docs/**`
+- Docker Desktop running
+- Internet connection (first image pull)
+
+No local MySQL instance is required for tests.
 
 ---
+
+# 🛠️ Common Troubleshooting
+
+## 🐳 Docker issues
+
+If containers fail:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+---
+
+## 🚨 HTTP 401
+
+JWT exceptions should be handled in security filters to return proper `401 Unauthorized`.
+
+---
+
+## 📚 Swagger unavailable
+
+Ensure security configuration allows:
+
+```text
+/swagger-ui/**
+/v3/api-docs/**
+```
+
+---
+
+# 📌 Future Improvements
+
+Possible future extensions:
+
+- 📧 Email notifications
+- 🌍 Multi-language support
+- 📊 Admin dashboard
+- 🧾 Invoice generation
+- ☁️ Cloud deployment
+- 📦 CI/CD pipeline
+- 🔄 Refresh tokens
+- 🧠 Caching with Redis
+
+---
+
+# 📄 License
+
+This project is for portfolio purposes.
+
