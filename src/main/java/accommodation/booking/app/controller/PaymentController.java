@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Payment Controller", description = "Payment related endpoints")
+@Tag(name = "05. Payments", description = "Payment related endpoints")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/payments")

@@ -1,7 +1,11 @@
-package accommodation.booking.app.security;
+package accommodation.booking.app.security.auth;
 
 import accommodation.booking.app.dto.user.UserLoginRequestDto;
 import accommodation.booking.app.dto.user.UserLoginResponseDto;
+import accommodation.booking.app.exception.EntityNotFoundException;
+import accommodation.booking.app.model.User;
+import accommodation.booking.app.repository.UserRepository;
+import accommodation.booking.app.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +18,7 @@ public class AuthenticationService {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
 
@@ -22,7 +27,10 @@ public class AuthenticationService {
                         request.email().trim().toLowerCase(),
                         request.password()));
 
-        String token = jwtUtil.generateToken(authenticate.getName());
+        User user = userRepository.findByEmail(authenticate.getName()).orElseThrow(
+                () -> new EntityNotFoundException("User not found in database"));
+
+        String token = jwtUtil.generateToken(user.getId(), authenticate.getName());
 
         return new UserLoginResponseDto(token);
     }

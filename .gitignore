@@ -1,8 +1,11 @@
 .env
-.target/
+target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+logs/
+*.log
+out/
 
 ### STS ###
 .apt_generated
@@ -31,3 +34,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Spring Boot
+spring.log
+
+# Docker
+docker-data/
+db/

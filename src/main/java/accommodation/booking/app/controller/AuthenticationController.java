@@ -5,7 +5,7 @@ import accommodation.booking.app.dto.user.UserLoginResponseDto;
 import accommodation.booking.app.dto.user.UserRegistrationRequestDto;
 import accommodation.booking.app.dto.user.UserResponseDto;
 import accommodation.booking.app.exception.RegistrationException;
-import accommodation.booking.app.security.AuthenticationService;
+import accommodation.booking.app.security.auth.AuthenticationService;
 import accommodation.booking.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Authentication Controller",
+@Tag(name = "01. Authentication",
         description = "Authentication related endpoints")
 @RequiredArgsConstructor
 @RestController

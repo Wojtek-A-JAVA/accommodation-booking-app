@@ -1,5 +1,6 @@
-package accommodation.booking.app.service;
+package accommodation.booking.app.scheduler;
 
+import accommodation.booking.app.service.BookingService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

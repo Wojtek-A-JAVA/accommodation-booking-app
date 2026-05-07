@@ -15,6 +15,7 @@ import accommodation.booking.app.repository.RoleRepository;
 import accommodation.booking.app.repository.UserRepository;
 import accommodation.booking.app.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,9 @@ public class UserServiceImpl implements UserService {
         User userToUpdate = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("User not found with id: " + id));
 
+        if (userToUpdate.getRole().getRoleName().equals(RoleName.PLATFORM_ADMIN)) {
+            throw new AccessDeniedException("Cannot modify PLATFORM_ADMIN role");
+        }
         if (userToUpdate.getRole().getRoleName().equals(RoleName.ADMIN)) {
             userToUpdate.setRole(roleRepository.findByRoleName(RoleName.CUSTOMER).orElseThrow(
                     () -> new RoleNotFoundExpectation("Customer role not found in database")));

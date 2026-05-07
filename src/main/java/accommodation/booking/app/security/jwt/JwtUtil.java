@@ -1,4 +1,4 @@
-package accommodation.booking.app.security;
+package accommodation.booking.app.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -25,9 +25,10 @@ public class JwtUtil {
         secret = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Long userId, String username) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secret)
@@ -54,5 +55,11 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claimsResolver.apply(claims);
+    }
+
+    public Long extractUserId(String token) {
+        return getClaimFromToken(token, claims ->
+                Long.valueOf(claims.get("userId").toString())
+        );
     }
 }

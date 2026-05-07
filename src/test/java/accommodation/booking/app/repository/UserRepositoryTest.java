@@ -26,6 +26,6 @@ class UserRepositoryTest {
 
     @Test
     void findByEmail_ReturnsEmpty_Success() {
-        assertTrue(userRepository.findByEmail("test@test.com").isEmpty());
+        assertTrue(userRepository.findByEmail("james@test.com").isEmpty());
     }
 }

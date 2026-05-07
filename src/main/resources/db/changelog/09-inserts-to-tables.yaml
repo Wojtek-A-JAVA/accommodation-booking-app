@@ -12,6 +12,10 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column: { name: role_name, value: 'CUSTOMER' }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: role_name, value: 'PLATFORM_ADMIN' }
 #INSERTS TO TABLE USERS
         - insert:
             tableName: users
@@ -39,6 +43,15 @@ databaseChangeLog:
               - column: { name: last_name, value: "Doe" }
               - column: { name: password, value: "$2a$10$.oxlUdFAQqW6EmrHs8oC0eTY4CIZqCp30E74KC2stjaPOMSesuyji"}
               - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: is_deleted, valueBoolean: false }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "wojtek@booking.app"}
+              - column: { name: first_name, value: "Wojtek" }
+              - column: { name: last_name, value: "Platform Admin" }
+              - column: { name: password, value: "$2a$10$osqwj76ypWl/1UE96DDBWOOoNRwNqI1T2Cvib.J1dsXqaXBmta9kC"}
+              - column: { name: role_id, valueNumeric: 3 }
               - column: { name: is_deleted, valueBoolean: false }
 #INSERTS TO TABLE LOCATIONS
         - insert:

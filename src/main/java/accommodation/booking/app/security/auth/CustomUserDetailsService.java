@@ -1,4 +1,4 @@
-package accommodation.booking.app.security;
+package accommodation.booking.app.security.auth;
 
 import accommodation.booking.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
