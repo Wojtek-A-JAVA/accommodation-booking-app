@@ -3,8 +3,8 @@ FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 # FOR LOCAL
 
- ARG JAR_FILE=target/*.jar
- COPY ${JAR_FILE} application.jar
+ # ARG JAR_FILE=target/*.jar
+ # COPY ${JAR_FILE} application.jar
 
 # FOR RENDER
 
