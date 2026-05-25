@@ -4,6 +4,7 @@ import accommodation.booking.app.dto.payment.CreatePaymentRequestDto;
 import accommodation.booking.app.dto.payment.PaymentDto;
 import accommodation.booking.app.dto.payment.PaymentResponseDto;
 import accommodation.booking.app.service.PaymentService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Tag(name = "05. Payments", description = "Payment related endpoints")
 @RequiredArgsConstructor
@@ -64,5 +66,11 @@ public class PaymentController {
             @RequestParam(name = "session_id") String sessionId
     ) {
         return paymentService.paymentCancel(sessionId);
+    }
+
+    @GetMapping("/success-redirect")
+    @Hidden
+    public RedirectView paymentSuccessRedirect(@RequestParam("session_id") String sessionId) {
+        return paymentService.paymentSuccessRedirect(sessionId);
     }
 }

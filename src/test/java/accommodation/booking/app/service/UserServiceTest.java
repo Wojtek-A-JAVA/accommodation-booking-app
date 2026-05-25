@@ -126,12 +126,13 @@ class UserServiceTest {
                 .setEmail("jamie@google.com")
                 .setFirstName("Jamie")
                 .setLastName("Test")
+                .setCurrentPassword("test")
                 .setPassword("password")
                 .setRepeatedPassword("password");
 
-        when(userRepository.findByEmail(userEmail))
-                .thenReturn(Optional.of(userFromGetUser))
-                .thenReturn(Optional.of(loggedUser));
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(loggedUser));
+        when(passwordEncoder.matches("test", "oldPassword"))
+                .thenReturn(true);
         when(passwordEncoder.encode("password")).thenReturn("NEW_HASH");
         when(userRepository.save(loggedUser)).thenReturn(loggedUser);
 

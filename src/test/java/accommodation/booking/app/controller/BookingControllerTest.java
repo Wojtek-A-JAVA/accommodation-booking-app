@@ -1,5 +1,7 @@
 package accommodation.booking.app.controller;
 
+import static accommodation.booking.app.model.Type.APARTMENT;
+import static accommodation.booking.app.model.Type.CONDO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,7 +61,7 @@ public class BookingControllerTest {
         BookingDto expected = new BookingDto(4L,
                 LocalDate.of(2036, 2, 20),
                 LocalDate.of(2036, 2, 21),
-                1L, 3L, "PENDING");
+                1L, "Warsaw", "Swietokrzyska 1",APARTMENT,3L,"PENDING");
 
         MvcResult result = mockMvc.perform(
                         post("/bookings")
@@ -110,8 +112,8 @@ public class BookingControllerTest {
         Long userId = 2L;
         String status = "CONFIRMED";
         BookingDto bookingDto = new BookingDto(2L, LocalDate.of(2027, 2, 2),
-                LocalDate.of(2027, 3, 2), 2L, 2L,
-                "CONFIRMED");
+                LocalDate.of(2027, 3, 2), 2L, "NY",
+                "Fifth Avenue 1", CONDO, 2L, "CONFIRMED");
 
         List<BookingDto> expected = List.of(bookingDto);
 
@@ -155,8 +157,8 @@ public class BookingControllerTest {
     void getBooking_ByAdmin_Success() throws Exception {
         Long bookingId = 2L;
         BookingDto expected = new BookingDto(2L, LocalDate.of(2027, 2, 2),
-                LocalDate.of(2027, 3, 2), 2L, 2L,
-                "CONFIRMED");
+                LocalDate.of(2027, 3, 2), 2L, "NY",
+                "Fifth Avenue 1", CONDO, 2L, "CONFIRMED");
 
         MvcResult result = mockMvc.perform(get("/bookings/{id}", bookingId))
                 .andExpect(status().isOk())

@@ -19,6 +19,9 @@ public interface BookingMapper {
     Booking toEntity(CreateBookingRequestDto requestDto);
 
     @Mapping(target = "accommodationId", source = "accommodation.id")
+    @Mapping(target = "accommodationType", source = "accommodation.type")
+    @Mapping(target = "city", source = "accommodation.location.city")
+    @Mapping(target = "street", source = "accommodation.location.street")
     @Mapping(target = "userId", source = "user.id")
     BookingDto toDto(Booking booking);
 

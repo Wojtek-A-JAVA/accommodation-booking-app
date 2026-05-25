@@ -72,7 +72,7 @@ class UserControllerTest {
     void updateLoggedInUserInfo_Success() throws Exception {
         UserUpdateRequestDto request = new UserUpdateRequestDto();
         request.setEmail("jamie@google.com").setFirstName("Jamie").setLastName("Test")
-                .setPassword("password").setRepeatedPassword("password");
+                .setCurrentPassword("test").setPassword("password").setRepeatedPassword("password");
 
         String jsonRequest = objectMapper.writeValueAsString(request);
 

@@ -15,14 +15,20 @@ public class PasswordValidator implements ConstraintValidator<PasswordMatch,
     public boolean isValid(Object requestDto,
                            ConstraintValidatorContext constraintValidatorContext) {
 
-        if (requestDto != null && requestDto.getClass() == UserRegistrationRequestDto.class) {
-            password = ((UserRegistrationRequestDto) requestDto).getPassword();
-            repeatedPassword = ((UserRegistrationRequestDto) requestDto).getRepeatedPassword();
+        if (requestDto instanceof UserUpdateRequestDto dto) {
+            password = dto.getPassword();
+            repeatedPassword = dto.getRepeatedPassword();
         }
-        if (requestDto != null && requestDto.getClass() == UserUpdateRequestDto.class) {
-            password = ((UserUpdateRequestDto) requestDto).getPassword();
-            repeatedPassword = ((UserUpdateRequestDto) requestDto).getRepeatedPassword();
+        if (requestDto instanceof UserRegistrationRequestDto dto) {
+            password = dto.getPassword();
+            repeatedPassword = dto.getRepeatedPassword();
         }
-        return password != null && password.equals(repeatedPassword);
+        if (password == null && repeatedPassword == null) {
+            return true;
+        }
+        if (password == null || repeatedPassword == null) {
+            return false;
+        }
+        return password.equals(repeatedPassword);
     }
 }
