@@ -21,6 +21,25 @@ The project demonstrates production-style backend features including:
 - 🛡️ Global exception handling
 
 ---
+# 🖼️ Application Preview
+<p align="center">
+  <img src="docs/swagger-features.jpg" width="30%"/>
+  <img src="docs/swagger-endpoints-one.jpg" width="30%"/>
+  <img src="docs/swagger-endpoints-two.jpg" width="30%"/>
+</p>
+<p align="center">
+  Frontend preview – customer-facing part of the application for accommodation browsing,
+  booking management, payments, and user profile operations.
+  Administrative features are primarily exposed through secured REST API endpoints.
+</p>
+
+<p align="center">
+  <img src="docs/frontend-booking.jpg" width="24%"/>
+  <img src="docs/frontend-accommodations.jpg" width="24%"/>
+  <img src="docs/frontend-user-info.jpg" width="24%"/>
+  <img src="docs/frontend-user-bookings.jpg" width="24%"/>
+</p>
+---
 
 # ✨ Key Features
 
@@ -28,7 +47,7 @@ The project demonstrates production-style backend features including:
 - 📅 Booking management with validation and business rules
 - 💳 Stripe payment flow
 - 🔐 JWT authentication with stateless security
-- 👥 Role-based authorization (`ADMIN`, `CUSTOMER`)
+- 👥 Role-based authorization (`ADMIN`, `CUSTOMER`, `PLATFORM_ADMIN`)
 - ⚡ API rate limiting using Bucket4j
 - 🧱 Database migrations with Liquibase
 - 🧪 Unit and integration tests
@@ -43,6 +62,7 @@ The project demonstrates production-style backend features including:
 
 - [🧰 Tech Stack](#-tech-stack)
 - [🗂️ Project Structure](#️-project-structure)
+- [🎨 Frontend](#-frontend)
 - [👥 Features & Roles](#-features--roles)
 - [⚡ Rate Limiting](#-rate-limiting)
 - [🛡️ Security Notes](#️-security-notes)
@@ -73,9 +93,35 @@ The project demonstrates production-style backend features including:
 - 📣 Telegram Bots API
 - 🧩 MapStruct
 - 🧷 Lombok
+- 🎨 HTML5 + CSS3 + JavaScript
 - 🧪 JUnit 5 + Mockito + Spring Boot Test
 - 🐳 Docker & Docker Compose
 - 🧪 Testcontainers
+
+---
+
+# 🎨 Frontend
+
+The application includes a lightweight frontend built with:
+
+- HTML5
+- CSS3
+- Vanilla JavaScript
+
+Frontend resources are served directly by Spring Boot from:
+
+```text
+src/main/resources/static
+```
+Features:
+
+🔐 Authentication flow (register/login)
+👤 User profile management
+🏘️ Accommodation browsing
+📅 Booking management
+💳 Stripe Checkout integration
+📱 Responsive UI
+🔗 REST API communication using Fetch API
 
 ---
 
@@ -109,6 +155,11 @@ src/main/resources
 # 👥 Features & Roles
 
 ## 🧑‍💼 Roles
+
+### 🛡️ PLATFORM_ADMIN
+
+- Update accommodations
+- Delete accommodations
 
 ### 🛡️ ADMIN
 

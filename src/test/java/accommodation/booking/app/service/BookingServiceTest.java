@@ -1,5 +1,6 @@
 package accommodation.booking.app.service;
 
+import static accommodation.booking.app.model.Type.CONDO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,11 +31,13 @@ import accommodation.booking.app.repository.BookingRepository;
 import accommodation.booking.app.repository.PaymentRepository;
 import accommodation.booking.app.repository.UserRepository;
 import accommodation.booking.app.service.impl.BookingServiceImpl;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -105,7 +108,10 @@ class BookingServiceTest {
                 request.checkInDate(),
                 request.checkOutDate(),
                 5L,
-                10L,
+                "Berlin",
+                "Short 50",
+                CONDO,
+                3L,
                 "PENDING"
         );
         when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
@@ -195,9 +201,11 @@ class BookingServiceTest {
                 .thenReturn(List.of(booking1, booking2));
 
         BookingDto bookingDto1 = new BookingDto(1L, LocalDate.now().plusDays(1),
-                LocalDate.now().plusDays(2), 5L, 2L, "CONFIRMED");
+                LocalDate.now().plusDays(2), 5L, "NY",
+                "Fifth Avenue 1", CONDO, 2L, "CONFIRMED");
         BookingDto bookingDto2 = new BookingDto(2L, LocalDate.now().plusDays(3),
-                LocalDate.now().plusDays(4), 6L, 2L, "CONFIRMED");
+                LocalDate.now().plusDays(4), 6L, "NY",
+                "Fifth Avenue 1", CONDO, 2L, "CONFIRMED");
         when(bookingMapper.toDto(booking1)).thenReturn(bookingDto1);
         when(bookingMapper.toDto(booking2)).thenReturn(bookingDto2);
 
@@ -221,7 +229,8 @@ class BookingServiceTest {
         when(bookingRepository.findByUserId(3L)).thenReturn(List.of(booking));
 
         BookingDto bookingDto = new BookingDto(1L, LocalDate.now().plusDays(1),
-                LocalDate.now().plusDays(2), 5L, 4L, "PENDING");
+                LocalDate.now().plusDays(2), 5L, "NY",
+                "Fifth Avenue 10", CONDO, 4L, "PENDING");
         when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
         List<BookingDto> actual = service.getUserBookings("james@google.com");
@@ -237,7 +246,8 @@ class BookingServiceTest {
         when(bookingRepository.findById(8L)).thenReturn(Optional.of(booking));
 
         BookingDto bookingDto = new BookingDto(8L, LocalDate.now().plusDays(1),
-                LocalDate.now().plusDays(2), 5L, 4L, "PENDING");
+                LocalDate.now().plusDays(2), 5L, "NY",
+                "Fifth Avenue 10", CONDO, 4L, "PENDING");
         when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
         BookingDto actual = service.getBookingById(8L);
@@ -305,8 +315,9 @@ class BookingServiceTest {
         );
 
         BookingDto bookingDto = new BookingDto(
-                1L, update.checkInDate(), update.checkOutDate(), 5L, 4L, "PENDING"
-        );
+                1L, update.checkInDate(), update.checkOutDate(), 5L, "NY",
+                "Fifth Avenue 10", CONDO, 4L, "PENDING");
+
         when(bookingMapper.toDto(booking)).thenReturn(bookingDto);
 
         BookingDto actual = service.updateBooking(1L, update, "james@google.com");

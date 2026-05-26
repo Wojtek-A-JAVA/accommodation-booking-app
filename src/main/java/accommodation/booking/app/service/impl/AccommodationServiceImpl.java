@@ -65,6 +65,16 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
+    public List<AccommodationDto> searchAccommodation(String city, LocalDate checkIn,
+                                                      LocalDate checkOut) {
+        List<Accommodation> accommodationList = accommodationRepository
+                .findAvailableAccommodations(city, checkIn, checkOut);
+        return accommodationList.stream()
+                .map(accommodationMapper::toDto)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public AccommodationDto updateAccommodation(Long id,
                                                 AccommodationUpdateRequestDto accommodationDto) {

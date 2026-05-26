@@ -1,0 +1,717 @@
+/** Base Styles
+--------------------------------------------------------------*/
+:root {
+  --accent-color: #fdb445;
+  --dark-color: #111111;
+  --light-color: #FFFFFF;
+  --grey-color: #83898F;
+  --body-text-color: #111111;
+  --light-text-color: #505050;
+  --link-color: #092035;
+
+  --bs-primary-rgb: 252, 187, 88;
+}
+
+/** Typography
+  --------------------------------------------------------------*/
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.6em;
+  color: var(--body-text-color);
+  background-color: var(--light-color);
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  color: var(--body-text-color);
+}
+
+h1,
+.h1 {
+  font-size: 68px;
+}
+
+h2,
+.h2 {
+  font-size: 48px;
+}
+.user-data {
+  margin-top: 125px;
+  justify-content: space-evenly;
+
+
+}
+
+.user-info {
+  width: 400px;
+}
+
+@media only screen and (max-width: 500px) {
+  
+  h1,
+  .h1 {
+    font-size: 58px;
+  }
+  
+  h2,
+  .h2 {
+    font-size: 40px;
+  }
+  
+  .user-data {
+  margin-top: 100px;
+  }
+
+  .logo {
+    display: none;
+  }
+}
+
+em {
+  font-weight: 700;
+}
+
+ul {
+  padding: 0;
+}
+
+p {
+  font-family: 'Work Sans', sans-serif;
+  color: var(--light-text-color);
+  font-size: 18px;
+}
+
+a {
+  color: var(--light-text-color);
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+
+li.residence-list {
+  list-style: none;
+  margin-right: 10px;
+}
+
+li {
+  list-style: none;
+}
+
+i {
+  color: var(--light-text-color);
+}
+
+i:hover {
+  color: var(--body-text-color);
+  text-decoration: none;
+}
+
+
+.padding-large {
+  padding-top: 20rem;
+}
+
+.padding-medium {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.padding-medium-2 {
+  padding-top: 14rem;
+  padding-bottom: 6rem;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .padding-large {
+    padding-top: 18rem;
+  }
+
+  .padding-medium {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .padding-medium-2 {
+    padding-top: 12rem;
+  }
+}
+
+/* Bootstrap button style  */
+.btn {
+  --bs-btn-border-radius: 10rem;
+  --bs-btn-padding-x: 2rem;
+  --bs-btn-padding-y: 1rem;
+}
+
+.btn-auth-nav {
+  --bs-btn-border-radius: 10rem;
+  --bs-btn-padding-x: 2rem;
+  --bs-btn-padding-y: 1rem;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--accent-color);
+  --bs-btn-border-color: var(--accent-color);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--accent-color);
+  --bs-btn-hover-border-color: var(--accent-color);
+
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--accent-color);
+  --bs-btn-active-border-color: var(--accent-color);
+
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--accent-color);
+  --bs-btn-disabled-border-color: var(--accent-color);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--accent-color);
+  --bs-btn-border-color: var(--accent-color);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--accent-color);
+  --bs-btn-hover-border-color: var(--accent-color);
+  --bs-btn-focus-shadow-rgb: 13, 110, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--accent-color);
+  --bs-btn-active-border-color: var(--accent-color);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: var(--accent-color);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--accent-color);
+  --bs-gradient: none;
+}
+
+.btn-header {
+  height: fit-content;
+}
+
+
+/*---- navbar section start ---- */
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:focus,
+.navbar-nav .nav-link:hover {
+  color: var(--light-color);
+}
+
+.nav-link {
+  color: var(--light-color);
+  font-size: 16px;
+  position: relative;
+}
+
+.nav-link:not(.dropdown-toggle):after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--accent-color);
+  border-bottom: 2px solid var(--accent-color);
+  transition: width 0.3s ease-out;
+}
+
+.dropdown-menu {
+  --bs-dropdown-border-radius: 0px;
+  --bs-dropdown-link-active-bg: var(--grey-color);
+  min-width: max-content;
+}
+
+.nav-link.active:after {
+  width: 100%;
+}
+
+/* login form  */
+a.password:hover {
+  color: var(--link-color);
+}
+
+.form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: var(--dark-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem #ffffffea;
+}
+
+.modal-backdrop {
+  --bs-backdrop-zindex: 1029;
+}
+
+.bg-dark {
+  background-color: var(--dark-color) !important;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99999;
+  transition: background 0.3s ease-out;
+}
+
+a.navbar-brand {
+  color: var(--body-text-color);
+}
+
+a.nav-link.dropdown-toggle {
+  color: #D6D6D6;
+  font-size: 16px;
+}
+
+.offcanvas.show {
+  background-color: var(--dark-color);
+}
+
+
+
+/*---- billboard section start ----  */
+
+.form-select {
+  border: 1px solid transparent;
+  border-radius: none;
+}
+
+.form-select:focus {
+  border-color: transparent;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem transparent;
+}
+
+.billboard-select {
+  border-right: 1px solid #E8E8E8;
+  padding-right: 20px;
+  padding-top: 25px;
+}
+
+.billboard-row {
+  background-color: white;
+}
+
+button.btn.btn-primary.btn-lg.billboard-search {
+  padding: 24px;
+  border: 5px solid white;
+  width: 100%;
+}
+
+
+@media only screen and (max-width: 1000px) {
+
+  .billboard-row {
+    background-color: transparent;
+  }
+
+}
+
+
+
+/*---- residence section start ----  */
+
+.card {
+  --bs-card-border-width: none;
+  --bs-card-border-radius: none;
+  --bs-card-inner-border-radius: none;
+  background-color: transparent !important;
+
+}
+
+
+/*---- testimonial section start ---- */
+p.testimonial-p {
+  font-size: 32px;
+  color: var(--body-text-color);
+}
+
+.testimonial-swiper-button {
+  bottom: 30px;
+  right: 0px;
+  width: 120px;
+}
+
+.swiper-button-prev.testimonial-arrow,
+.swiper-button-next.testimonial-arrow {
+  color: var(--body-text-color);
+  --swiper-navigation-size: 30px;
+  font-weight: bold;
+}
+
+.arrow-divider {
+  font-size: 30px;
+  color: var(--grey-color);
+  padding-left: 56px;
+  padding-bottom: 6px;
+}
+
+@media only screen and (max-width: 900px) {
+  p.testimonial-p {
+    font-size: 25px;
+    color: var(--body-text-color);
+  }
+
+}
+
+
+
+/*--------------------------------------------------------------
+about page style start
+--------------------------------------------------------------*/
+
+img.abt-img {
+  width: inherit;
+}
+
+
+/*--------------------------------------------------------------
+blog page style start
+--------------------------------------------------------------*/
+
+.pagination {
+  --bs-pagination-color: var(--dark-color);
+  --bs-pagination-active-bg: var(--accent-color);
+  --bs-pagination-active-border-color: var(--grey-color);
+}
+
+.post-grid .post-item .post-image {
+  width: 100%;
+}
+
+.post-item .btn-link {
+  display: block;
+  color: var(--light-text-color);
+  position: relative;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.post-item .post-image {
+  margin-right: 20px;
+}
+
+.post-item .btn-link:hover:after {
+  width: 90px;
+}
+
+.post-item .btn-link:after {
+  content: '';
+  display: block;
+  border-bottom: 1px solid var(--light-text-color);
+  width: 20px;
+  transition: width 0.3s ease-out;
+}
+
+.btn-link,
+.btn-link:hover {
+  color: var(--body-text-color);
+}
+
+
+
+/*--------------------------------------------------------------
+single-post page style start
+--------------------------------------------------------------*/
+
+.commentorImg {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+}
+
+
+/*--------------------------------------------------------------
+style page style start
+--------------------------------------------------------------*/
+
+/* chocolat style  */
+.chocolat-wrapper {
+  z-index: 99999;
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--body-text-color);
+  background-color: transparent;
+}
+
+.accordion {
+  --bs-accordion-color: var(--light-text-color);
+  --bs-accordion-bg: none;
+  --bs-accordion-btn-color: var(--body-text-color);
+  --bs-accordion-btn-icon: url('https://api.iconify.design/eva/arrow-up-fill.svg?color=black');
+  --bs-accordion-btn-active-icon: url('https://api.iconify.design/eva/arrow-up-fill.svg?color=black');
+}
+
+.accordion-button:focus {
+  z-index: 3;
+  border-color: none;
+  box-shadow: none;
+}
+
+.nav-tabs {
+  --bs-nav-tabs-border-width: none;
+  --bs-nav-tabs-link-active-color: none;
+  --bs-nav-tabs-link-active-bg: none;
+  border-bottom: 1px solid var(--light-text-color);
+}
+
+.card.style-card.mb-4.rounded-3.shadow-sm {
+  --bs-card-border-width: 1px;
+  --bs-card-border-color: var(--light-text-color);
+}
+
+.border-primary {
+
+  border-color: var(--accent-color) !important;
+
+}
+
+button.btn.btn-dark {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #424649;
+  --bs-btn-border-color: #424649;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #212529;
+  --bs-btn-hover-border-color: #212529;
+}
+
+
+.bg-primary {
+  background-color: var(--accent-color) !important;
+}
+
+.table-dark {
+  --bs-table-border-color: none;
+}
+
+.bi {
+  fill: #fff;
+}
+
+
+/*--------------------------------------------------------------
+reviews page style start
+--------------------------------------------------------------*/
+.reviews-components {
+  border: 1px solid var(--light-text-color);
+  box-shadow: 0px 12px 90px rgba(12, 12, 12, 0.06);
+  border-radius: 9px;
+}
+
+iconify-icon.quote {
+  font-size: 60px;
+  color: var(--accent-color);
+}
+
+.rate {
+  color: var(--accent-color);
+}
+
+
+
+/*--------------------------------------------------------------
+Properties page style start
+--------------------------------------------------------------*/
+
+.form-check-input:checked {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* price slider style  */
+.price-input {
+  width: 100%;
+  display: flex;
+  margin: 30px 0 35px;
+}
+
+.price-input .field {
+  display: flex;
+  width: 100%;
+  height: 45px;
+  align-items: center;
+}
+
+.field input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-size: 19px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid #999;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.price-input .separator {
+  display: flex;
+  font-size: 19px;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider {
+  height: 5px;
+  position: relative;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+.slider .progress {
+  height: 100%;
+  left: 5%;
+  right: 90%;
+  position: absolute;
+  border-radius: 5px;
+  background: var(--accent-color);
+}
+
+.range-input {
+  position: relative;
+}
+
+.range-input input {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  top: -5px;
+  background: none;
+  pointer-events: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  height: 17px;
+  width: 17px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  pointer-events: auto;
+  -webkit-appearance: none;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 17px;
+  width: 17px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-color);
+  pointer-events: auto;
+  -moz-appearance: none;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.swatch-element .swatch-label {
+  font-weight: 400;
+  line-height: 32px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px;
+  min-width: 50px;
+  height: 50px;
+  border: 1px solid var(--bs-gray);
+  transition: all 0.3s;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.swatch-element .swatch-input {
+  display: none;
+}
+
+.swatch-element .swatch-input:checked+.swatch-label {
+  border: 3px solid var(--accent-color);
+}
+
+
+/*--------------------------------------------------------------
+Properties-single page style start
+--------------------------------------------------------------*/
+
+iconify-icon.property-icon {
+  color: var(--body-text-color);
+  font-size: 30px;
+
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+}
+
+.logo-amenity {
+  height: 25px;
+  width: auto;
+}
+
+.auth-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.auth-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 20px;
+}
+
+.auth-icon, 
+.auth-icon i {
+  font-size: 28px;
+  color: #fdb445;
+}
+
+.auth-icon:hover,
+.auth-icon:hover i {
+  color: white;
+}
+
+.update-form {
+  padding-left: 5px;
+  width: 350px;
+  outline: none;
+  border: none;
+  border-bottom: solid 1px #fdb445;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.312px;
+}
+
+.update-btn {
+  margin-top: 10px;
+      padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 20px;
+}
+
+.accommodation-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}

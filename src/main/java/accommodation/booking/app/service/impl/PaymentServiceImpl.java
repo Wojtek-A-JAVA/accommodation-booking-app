@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +46,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserRepository userRepository;
     private final PaymentMapper paymentMapper;
     private final NotificationService notifier;
+
+    @Value("${FRONTEND_URL:http://localhost:8080}")
+    private String frontendUrl;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -79,7 +83,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(baseUrl + "/payments/success?session_id={CHECKOUT_SESSION_ID}")
+                .setSuccessUrl(baseUrl
+                        + "/payments/success-redirect?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(baseUrl + "/payments/cancel?session_id={CHECKOUT_SESSION_ID}")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
@@ -173,6 +178,12 @@ public class PaymentServiceImpl implements PaymentService {
         paymentResponseDto.setMessage("Payment is canceled and can be made later, "
                 + "but the session is available only for 24 hours");
         return paymentResponseDto;
+    }
+
+    @Override
+    public RedirectView paymentSuccessRedirect(String sessionId) {
+        paymentSuccess(sessionId);
+        return new RedirectView(frontendUrl + "/user.html?paymentSuccess=true");
     }
 
     private User getUser(String userEmail) {

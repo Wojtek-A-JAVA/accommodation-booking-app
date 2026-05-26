@@ -4,6 +4,7 @@ import accommodation.booking.app.dto.payment.CreatePaymentRequestDto;
 import accommodation.booking.app.dto.payment.PaymentDto;
 import accommodation.booking.app.dto.payment.PaymentResponseDto;
 import java.util.List;
+import org.springframework.web.servlet.view.RedirectView;
 
 public interface PaymentService {
 
@@ -15,4 +16,6 @@ public interface PaymentService {
     PaymentResponseDto paymentSuccess(String sessionId);
 
     PaymentResponseDto paymentCancel(String sessionId);
+
+    RedirectView paymentSuccessRedirect(String sessionId);
 }

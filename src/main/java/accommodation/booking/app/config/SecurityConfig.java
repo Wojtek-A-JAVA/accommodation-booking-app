@@ -36,9 +36,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(HttpMethod.GET, "/payments/success",
+                                .requestMatchers(HttpMethod.GET, "/payments/success-redirect",
+                                        "/payments/success",
                                         "/payments/cancel").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/accommodations").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/accommodations",
+                                        "/accommodations/search",
+                                        "/locations",
+                                        "/locations/**"
+                                )
+                                .permitAll()
                                 .requestMatchers("/auth/register",
                                         "/auth/login",
                                         "/error",
@@ -47,7 +53,13 @@ public class SecurityConfig {
                                         "/swagger-ui/index.html",
                                         "/swagger-ui.html",
                                         "/swagger-ui/**",
-                                        "/v3/api-docs/**"
+                                        "/v3/api-docs/**",
+                                        "/",
+                                        "/index.html",
+                                        "/user.html",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/images/**"
                                 )
                                 .permitAll()
                                 .anyRequest()

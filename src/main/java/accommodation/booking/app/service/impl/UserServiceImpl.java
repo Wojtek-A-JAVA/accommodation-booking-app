@@ -5,6 +5,7 @@ import accommodation.booking.app.dto.user.UserResponseDto;
 import accommodation.booking.app.dto.user.UserRoleResponseDto;
 import accommodation.booking.app.dto.user.UserUpdateRequestDto;
 import accommodation.booking.app.exception.EntityNotFoundException;
+import accommodation.booking.app.exception.InvalidPasswordException;
 import accommodation.booking.app.exception.RegistrationException;
 import accommodation.booking.app.exception.RoleNotFoundExpectation;
 import accommodation.booking.app.mapper.UserMapper;
@@ -79,7 +80,13 @@ public class UserServiceImpl implements UserService {
         User user = getUser(userEmail);
         User loggedUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new EntityNotFoundException("User not found in database"));
-        if (request.getPassword() != null) {
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            if (request.getCurrentPassword() == null || request.getCurrentPassword().isBlank()) {
+                throw new InvalidPasswordException("Current password is required");
+            }
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                throw new InvalidPasswordException("Current password is incorrect");
+            }
             loggedUser.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         if (request.getFirstName() != null) {

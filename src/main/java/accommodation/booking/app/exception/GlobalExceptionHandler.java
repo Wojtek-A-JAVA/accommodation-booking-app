@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MethodArgumentNotValidException.class, RegistrationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(
-            HttpServletRequest request, MethodArgumentNotValidException ex) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+       public ResponseEntity<Object> handleValidationExceptions(
+               HttpServletRequest request, MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult()
                 .getAllErrors()
                 .getFirst()
@@ -27,6 +27,18 @@ public class GlobalExceptionHandler {
         body.put("path", request.getRequestURI());
         body.put("message", message);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<Object> handleRegistrationException(
+            HttpServletRequest request, RegistrationException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", OffsetDateTime.now());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", HttpStatus.CONFLICT.getReasonPhrase());
+        body.put("path", request.getRequestURI());
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
