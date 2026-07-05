@@ -1,13 +1,6 @@
 # Builder stage
 FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
-# FOR LOCAL
-
- # ARG JAR_FILE=target/*.jar
- # COPY ${JAR_FILE} application.jar
-
-# FOR RENDER
-
 COPY . .
 RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
